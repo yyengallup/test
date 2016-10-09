@@ -55,7 +55,7 @@ void loop() {
   Serial.print(getDPS(y));
   Serial.print(" z: ");
   Serial.println(getDPS(z));
-  
+
   delay(1000);
 }
 
@@ -69,7 +69,7 @@ byte read(unsigned short reg) {
   byte val = Wire.read();
   Wire.endTransmission(true);
   return val;
-  
+
 }
 
 void write(unsigned short reg, byte data) {
@@ -80,9 +80,5 @@ void write(unsigned short reg, byte data) {
 }
 
 float getDPS(int16_t val) {
-  float conversion = 500/32768;
-  return val * conversion;
+  return val * 500 / 32768;
 }
-
-
-
