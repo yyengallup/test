@@ -1,20 +1,22 @@
 #include <i2c_t3.h>
 
 
-#define ADDR 0x68
+#define ADDR 0x68 //i2c address of sensor
 
-#define PWR_MNG 0x6B
-#define USR_CNTRL 0x6A
-#define GYRO_SETUP 0x1B
+#define PWR_MNG 0x6B //register address of pwr management
+#define USR_CNTRL 0x6A //register address of user control
+#define GYRO_SETUP 0x1B //register address of gryoscope setup
 
-#define GYRO_X_HIGH 0x43
-#define GYRO_X_LOW 0x44
+#define GYRO_BASE 0x43
 
-#define GYRO_Y_HIGH 0x45
-#define GYRO_Y_LOW 0x46
+#define OFFSET_X_HIGH 0x0
+#define OFFSET_X_LOW 0x1
 
-#define GYRO_Z_HIGH 0x47
-#define GYRO_Z_LOW 0x48
+#define OFFSET_Y_HIGH 0x2
+#define OFFSET_Y_LOW 0x3
+
+#define OFFSET_Z_HIGH 0x4
+#define OFFSET_Z_LOW 0x5
 
 int16_t x, y, z;
 
@@ -32,22 +34,7 @@ void setup() {
 
 
 void loop() {
-  byte high, low;
-
-  high = read(GYRO_X_HIGH);
-  low = read(GYRO_X_LOW);
-
-  x = (high<<8) | low;
-
-  high = read(GYRO_Y_HIGH);
-  low = read(GYRO_Y_LOW);
-
-  y = (high<<8) | low;
-
-  high = read(GYRO_Z_HIGH);
-  low = read(GYRO_Z_LOW);
-
-  z = (high<<8) | low;
+  readGYRO();
 
   Serial.print("x: ");
   Serial.print(getDPS(x));
@@ -57,6 +44,25 @@ void loop() {
   Serial.println(getDPS(z));
 
   delay(1000);
+}
+
+void readGyro() {
+  byte high, low;
+
+  high = read(GYRO_BASE + OFFSET_X_HIGH);
+  low = read(GYRO_BASE + OFFSET_X_LOW);
+
+  x = (high<<8) | low;
+
+  high = read(GYRO_BASE + OFFSET_Y_HIGH);
+  low = read(GYRO_BASE + OFFSET_Y_LOW);
+
+  y = (high<<8) | low;
+
+  high = read(GYRO_BASE + OFFSET_Z_HIGH);
+  low = read(GYRO_BASE + OFFSET_Z_LOW);
+
+  z = (high<<8) | low;
 }
 
 
